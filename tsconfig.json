@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "commonjs",
     "lib": ["dom", "esnext"],
-    "jsx": "react",
+    "jsx": "react-jsx",
     "declaration": true,
     "outDir": "lib/typescript",
     "strict": true,

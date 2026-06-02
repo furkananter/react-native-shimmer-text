@@ -5,14 +5,14 @@ module.exports = {
     "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
   },
   transformIgnorePatterns: [
-    "node_modules/(?!(react-native|@react-native|react-native-reanimated|@react-native-masked-view/masked-view)/)",
+    "node_modules/(?!(react-native|@react-native|react-native-reanimated|react-native-worklets|@react-native-masked-view/masked-view)/)",
   ],
-  setupFilesAfterEnv: [
-    "@testing-library/jest-native/extend-expect",
-    "<rootDir>/jest.setup.js",
-  ],
-  moduleNameMapper: {
-    "^react-native$": "react-native",
-  },
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   testPathIgnorePatterns: ["/node_modules/", "/lib/"],
+  collectCoverageFrom: [
+    "src/**/*.{ts,tsx}",
+    "!src/**/__tests__/**",
+    "!src/**/*.d.ts",
+  ],
+  coverageReporters: ["text", "lcov"],
 };
