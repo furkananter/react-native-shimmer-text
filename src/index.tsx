@@ -1,89 +1,68 @@
 import MaskedView from "@react-native-masked-view/masked-view";
-import React from "react";
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { memo } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
-import { defaultShimmerColors } from "./colors";
-import { ShimmerTextProps, textSizes } from "./types";
+import { NativeShimmerStyle, ShimmerTextProps } from "./types";
+import { useShimmer } from "./useShimmer";
 
-export function ShimmerText({
-  children,
-  style,
-  shimmerStyle,
-  containerStyle,
-  duration = 3,
-  bold = true,
-  highlightWidth,
-  direction = "ltr",
-  angle = 100,
-  width,
-  height,
-  size = "md",
-  colors,
-}: ShimmerTextProps) {
-  const gradientBackground = "experimental_backgroundImage" as const;
-  const systemColorScheme = useColorScheme() ?? "light";
-  const currentColors = {
-    ...defaultShimmerColors[systemColorScheme],
-    ...colors?.[systemColorScheme],
+const DEFAULT_DURATION = 3;
+
+/** Builds the New Architecture CSS keyframe animation for the gradient layer. */
+function buildAnimation(
+  duration: number,
+  direction: "ltr" | "rtl",
+): NativeShimmerStyle {
+  const fromX = direction === "ltr" ? "-25%" : "25%";
+  const toX = direction === "ltr" ? "25%" : "-25%";
+  return {
+    animationName: {
+      from: { transform: [{ translateX: fromX }] },
+      to: { transform: [{ translateX: toX }] },
+    },
+    animationDuration: `${duration}s`,
+    animationIterationCount: "infinite",
+    animationTimingFunction: "linear",
   };
-  const sizeConfig = textSizes[size];
-  const defaultWidth =
-    width ?? Math.max((children?.length || 0) * sizeConfig.fontSize * 0.6, 100);
-  const defaultHeight =
-    height ?? sizeConfig.height ?? sizeConfig.fontSize * 1.2;
+}
 
-  const shimmerColors = currentColors.shimmer;
-
-  const hw = Math.max(0, Math.min(100, highlightWidth ?? NaN));
-  const startStop = Number.isFinite(hw) ? 50 - hw / 2 : 46;
-  const endStop = Number.isFinite(hw) ? 50 + hw / 2 : 54;
+function ShimmerTextComponent(props: ShimmerTextProps) {
+  const {
+    children,
+    style,
+    shimmerStyle,
+    containerStyle,
+    duration = DEFAULT_DURATION,
+    direction = "ltr",
+    testID,
+  } = props;
+  const { width, height, fontSize, fontWeight, textColor, gradient } =
+    useShimmer(props);
 
   return (
     <View
-      style={[
-        styles.shimmerContainer,
-        { width: defaultWidth, height: defaultHeight },
-        containerStyle,
-      ]}
+      testID={testID}
+      style={[styles.container, { width, height }, containerStyle]}
     >
       <MaskedView
-        style={[styles.mask, { width: defaultWidth, height: defaultHeight }]}
+        style={[styles.mask, { width, height }]}
         maskElement={
           <Text
             style={[
               styles.label,
-              { color: currentColors.text, fontSize: sizeConfig.fontSize },
+              { color: textColor, fontSize },
               style,
-              { fontWeight: bold ? "bold" : "normal" },
+              { fontWeight },
             ]}
           >
-            {children || ""}
+            {children ?? ""}
           </Text>
         }
       >
         <Animated.View
           style={[
             styles.gradient,
-            {
-              [gradientBackground]: `linear-gradient(${angle}deg, ${shimmerColors.start} ${startStop}%, ${shimmerColors.middle} 50%, ${shimmerColors.end} ${endStop}%)`,
-            } as any,
-            {
-              animationName: {
-                from: {
-                  transform: [
-                    { translateX: direction === "ltr" ? "-25%" : "25%" },
-                  ],
-                },
-                to: {
-                  transform: [
-                    { translateX: direction === "ltr" ? "25%" : "-25%" },
-                  ],
-                },
-              },
-              animationDuration: `${duration}s`,
-              animationIterationCount: "infinite",
-              animationTimingFunction: "linear",
-            } as any,
+            { experimental_backgroundImage: gradient } as NativeShimmerStyle,
+            buildAnimation(duration, direction),
             shimmerStyle,
           ]}
         />
@@ -92,22 +71,16 @@ export function ShimmerText({
   );
 }
 
+export const ShimmerText = memo(ShimmerTextComponent);
+
 export default ShimmerText;
 
 const styles = StyleSheet.create({
-  shimmerContainer: {
+  container: {
     alignItems: "center",
     justifyContent: "center",
   },
-  mask: {
-    overflow: "hidden",
-  },
-  gradient: {
-    flex: 1,
-    width: "300%",
-    marginHorizontal: "-100%",
-  },
-  label: {
-    textAlign: "center",
-  },
+  mask: { overflow: "hidden" },
+  gradient: { flex: 1, width: "300%", marginHorizontal: "-100%" },
+  label: { textAlign: "center" },
 });

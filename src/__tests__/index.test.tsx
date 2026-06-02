@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react-native";
+import { defaultShimmerColors } from "../colors";
 import ShimmerText from "../index";
 
 // Mock react-native-reanimated for testing
@@ -34,8 +35,8 @@ jest.mock("@react-native-masked-view/masked-view", () => {
 });
 
 // Mock useColorScheme
-const mockUseColorScheme = jest.fn<"light" | "dark" | null | undefined, []>(
-  () => "light",
+const mockUseColorScheme = jest.fn(
+  (): "light" | "dark" | null | undefined => "light",
 );
 jest.mock("react-native/Libraries/Utilities/useColorScheme", () => ({
   default: mockUseColorScheme,
@@ -582,6 +583,36 @@ describe("ShimmerText", () => {
     it("uses correct default size", () => {
       render(<ShimmerText>Default Size</ShimmerText>);
       expect(screen.getByText("Default Size")).toBeTruthy();
+    });
+  });
+
+  describe("Resolved Styles", () => {
+    it("applies the testID to the container", () => {
+      render(<ShimmerText testID="native-shimmer">Hi</ShimmerText>);
+      expect(screen.getByTestId("native-shimmer")).toBeTruthy();
+    });
+
+    it("renders the mask text bold by default", () => {
+      render(<ShimmerText>Bold</ShimmerText>);
+      expect(screen.getByText("Bold")).toHaveStyle({ fontWeight: "bold" });
+    });
+
+    it("renders the mask text with normal weight when bold is false", () => {
+      render(<ShimmerText bold={false}>Normal</ShimmerText>);
+      expect(screen.getByText("Normal")).toHaveStyle({ fontWeight: "normal" });
+    });
+
+    it("uses the light theme text colour for the mask", () => {
+      mockUseColorScheme.mockReturnValue("light");
+      render(<ShimmerText>Masked</ShimmerText>);
+      expect(screen.getByText("Masked")).toHaveStyle({
+        color: defaultShimmerColors.light.text,
+      });
+    });
+
+    it("applies the resolved font size from the size token", () => {
+      render(<ShimmerText size="xl">Sized</ShimmerText>);
+      expect(screen.getByText("Sized")).toHaveStyle({ fontSize: 20 });
     });
   });
 });

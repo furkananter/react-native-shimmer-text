@@ -61,21 +61,22 @@ export default function Example() {
 
 ## ⚙️ Props
 
-| Prop             | Type                                              | Default     | Description                      |
-| ---------------- | ------------------------------------------------- | ----------- | -------------------------------- |
-| `children`       | `string`                                          | `undefined` | Text content                     |
-| `style`          | `TextStyle`                                       | `undefined` | Text styles                      |
-| `shimmerStyle`   | `ViewStyle` or `WebShimmerStyle`                  | `undefined` | Shimmer effect styles            |
-| `containerStyle` | `ViewStyle`                                       | `undefined` | Container styles                 |
-| `duration`       | `number`                                          | `3`         | Animation duration (seconds)     |
-| `bold`           | `boolean`                                         | `true`      | Bold text                        |
-| `highlightWidth` | `number`                                          | `undefined` | Shimmer width percentage (0-100) |
-| `direction`      | `'ltr'` or `'rtl'`                                | `'ltr'`     | Animation direction              |
-| `angle`          | `number`                                          | `100`       | Gradient angle (degrees)         |
-| `size`           | `TextSize`                                        | `'md'`      | Text size (`'xs'` to `'9xl'`)    |
-| `colors`         | `{ light?: ShimmerColors, dark?: ShimmerColors }` | `undefined` | Theme colors                     |
-| `width`          | `number`                                          | `undefined` | Custom width                     |
-| `height`         | `number`                                          | `undefined` | Custom height                    |
+| Prop             | Type                                              | Default     | Description                       |
+| ---------------- | ------------------------------------------------- | ----------- | --------------------------------- |
+| `children`       | `string`                                          | `undefined` | Text content                      |
+| `style`          | `TextStyle`                                       | `undefined` | Text styles                       |
+| `shimmerStyle`   | `ViewStyle` or `WebShimmerStyle`                  | `undefined` | Shimmer effect styles             |
+| `containerStyle` | `ViewStyle`                                       | `undefined` | Container styles                  |
+| `duration`       | `number`                                          | `3`         | Animation duration (seconds)      |
+| `bold`           | `boolean`                                         | `true`      | Bold text                         |
+| `highlightWidth` | `number`                                          | `undefined` | Shimmer width percentage (0-100)  |
+| `direction`      | `'ltr'` or `'rtl'`                                | `'ltr'`     | Animation direction               |
+| `angle`          | `number`                                          | `100`       | Gradient angle (degrees)          |
+| `size`           | `TextSize`                                        | `'md'`      | Text size (`'xs'` to `'9xl'`)     |
+| `colors`         | `{ light?: ShimmerColors, dark?: ShimmerColors }` | `undefined` | Theme colors                      |
+| `width`          | `number`                                          | `undefined` | Custom width                      |
+| `height`         | `number`                                          | `undefined` | Custom height                     |
+| `testID`         | `string`                                          | `undefined` | Test identifier for the container |
 
 ### `TextSize`
 
