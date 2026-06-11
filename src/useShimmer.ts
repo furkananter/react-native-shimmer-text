@@ -47,7 +47,8 @@ export function useShimmer(props: ShimmerTextProps): ShimmerConfig {
     colors,
   } = props;
 
-  const scheme = useColorScheme() ?? "light";
+  const scheme: "light" | "dark" =
+    useColorScheme() === "dark" ? "dark" : "light";
   const styleFontSize = style?.fontSize;
   const styleFontWeight = style?.fontWeight;
   const textLength = children?.length ?? 0;
